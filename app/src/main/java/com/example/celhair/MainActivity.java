@@ -19,10 +19,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -52,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     private Button mNext;
     private Bitmap mNewPicture;
 
+    private int test;
+
     private String[] fileNames;
 
     private RequestQueue requestQueue;
@@ -67,9 +72,52 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        test = 0;
+
         //queue = Volley.newRequestQueue(this);
 
         mPicView = (ImageView) findViewById(R.id.pictureView);
+        mPicView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View V){
+                if(test == 0){
+                    test = 1;
+                    Bitmap kopec = getBitmapFromAsset(getApplicationContext(),"tests/DavidKopec.jpg");
+                    mPicView.setImageBitmap(kopec);
+                }
+                else{
+                    try {
+                        StringBuilder stringB = new StringBuilder();
+                        InputStream is = getAssets().open("tests/results.csv");
+                        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+                        String str;
+                        while ((str = br.readLine()) != null) {
+                            stringB.append(str);
+                        }
+                        br.close();
+                        Log.d("HAIR", stringB.toString());
+                        fileNames = stringB.toString().split(",");
+                        for(int j = 0; j < fileNames.length; j++){
+                            fileNames[j] = fileNames[j].trim();
+                            Log.d("HAIR", fileNames[j]);
+                        }
+                        Intent intent = recycler_activity.newIntent(getApplicationContext(), currentPhotoPath, "new_face", fileNames);
+                        try {
+                            startActivity(intent);
+                        }
+                        catch(Exception ex){
+                            Log.d("FACE", "yo");
+                            Log.d("FACE", "error",ex);
+                        }
+                    }
+                    catch(Exception Ex){
+                        Ex.printStackTrace();
+                    }
+                }
+
+
+            }
+        });
 
         mPictureButton = (Button) findViewById(R.id.pictureButton);
         mPictureButton.setOnClickListener(new View.OnClickListener() {

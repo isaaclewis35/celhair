@@ -69,19 +69,19 @@ public class recycler_activity extends AppCompatActivity {
 
         }
 
+        loadFaces(mFileNames);
         //https://stackoverflow.com/questions/21651852/android-load-all-files-from-a-folder
-        String[] file_arr = null;
-        Context m_context = getApplicationContext();
-        try{
-            file_arr = m_context.getAssets().list("faces");
-        }
-        catch(Exception ex) {
-            ex.printStackTrace();
-        }
 
-        Bitmap[] faces_list = new Bitmap[file_arr.length];
+
+    }
+
+
+    private void loadFaces(String[] fileNames){
+
+
+        Bitmap[] faces_list = new Bitmap[fileNames.length];
         int i = 0;
-        for(String filename : file_arr){
+        for(String filename : fileNames){
             faces_list[i] = getBitmapFromAsset(getApplicationContext(),"faces/"+filename);
             i++;
         }
@@ -89,14 +89,12 @@ public class recycler_activity extends AppCompatActivity {
         mBaseFace = new face_image[faces_list.length];
         for(int x = 0; x < faces_list.length; x++){
             mBaseFace[x] = new face_image();
-            mBaseFace[x].setName(file_arr[x]);
+            mBaseFace[x].setName(fileNames[x]);
             mBaseFace[x].setPic(faces_list[x]);
         }
         Log.d("FACE","here");
         updateFaces();
-
     }
-
     // adapted from https://stackoverflow.com/questions/8501309/android-get-bitmap-or-sound-from-assets
     public static Bitmap getBitmapFromAsset(Context context, String filePath) {
         AssetManager assetManager = context.getAssets();
