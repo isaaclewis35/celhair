@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/hair_view"
+    android:layout_width="250dp"
+    android:layout_height="250dp"
+    android:layout_gravity="center_horizontal"
+    android:layout_margin="6dp"
+    app:srcCompat="@drawable/ic_launcher_background" />
