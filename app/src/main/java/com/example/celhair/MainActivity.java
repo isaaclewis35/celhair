@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private final int REQUEST_IMAGE_CAPTURE = 23;
     private final int REQUEST_TAKE_PHOTO = 1;
     private Button mPictureButton;
-    private Button mSetButton;
+    //private Button mSetButton;
     private Button mNext;
     private Bitmap mNewPicture;
 
@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /*
         mSetButton = (Button) findViewById(R.id.setButton);
         mSetButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 setPic(mPicView);
             }
         });
-
+        */
         mNext = (Button) findViewById(R.id.nextButton);
         mNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,11 +164,16 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mPicView.setImageBitmap(imageBitmap);
+            //mPicView.setImageBitmap(imageBitmap);
+            //setPic(mPicView);
             //https://developer.android.com/training/camera/photobasics#java
+        }
+        if(requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK){
+            setPic(mPicView);
         }
     }
 
+    /*
     private void takePicture(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -175,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return;
     }
-
+    */
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -215,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
         return image;
     }
 
+    /*
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(currentPhotoPath);
@@ -222,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
     }
-
+    */
     private void setPic(ImageView imageView) {
         // Get the dimensions of the View
         int targetW = imageView.getWidth();

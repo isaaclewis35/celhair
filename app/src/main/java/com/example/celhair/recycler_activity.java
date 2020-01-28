@@ -105,7 +105,7 @@ public class recycler_activity extends AppCompatActivity {
             istr = assetManager.open(filePath);
             bitmap = BitmapFactory.decodeStream(istr);
         } catch (IOException e) {
-            // handle exception
+            Log.d("FACE", "oh god");
         }
 
         return bitmap;
