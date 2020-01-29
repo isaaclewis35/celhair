@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String[] fileNames;
 
-    private RequestQueue requestQueue;
+
 
     private ImageView mPicView;
     String currentPhotoPath;
@@ -254,86 +254,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //adapted from https://developer.android.com/training/volley/requestqueue
-    private void sendImage(Bitmap imageToSend){
 
-        String sendable = getStringFromBitmap(imageToSend);
-
-
-        JSONObject hairObject = new JSONObject();
-
-        try {
-            hairObject.put("compressed_image", sendable);
-        }
-        catch(Exception ex){
-            Log.d("HAIR", ex.toString());
-        }
-        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
-
-        // Set up the network to use HttpURLConnection as the HTTP client.
-        BasicNetwork network = new BasicNetwork(new HurlStack());
-
-        // Instantiate the RequestQueue with the cache and network.
-        requestQueue = new RequestQueue(cache, network);
-
-        // Start the queue
-        requestQueue.start();
-
-
-        String url ="http://www.example.com";
-
-// Formulate the request and handle the response.
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, hairObject,
-                new Response.Listener<JSONObject>()
-                {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // display response
-                        try {
-                            JSONArray toLoad = response.getJSONArray("names");
-                            fileNames = new String[toLoad.length()];
-                            for(int i = 0; i< toLoad.length();i++){
-                                fileNames[i] = toLoad.getString(i);
-                            }
-                        }
-                        catch(Exception Ex){
-                            Log.d("HAIR", Ex.toString());
-                        }
-                        Log.d("Response", response.toString());
-                    }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("Error.Response", error.toString());
-                    }
-                }
-        );
-
-// add it to the RequestQueue
-        requestQueue.add(getRequest);
-
-
-    }
-
-    //from https://stackoverflow.com/questions/30818538/converting-json-object-with-bitmaps
-    private String getStringFromBitmap(Bitmap bitmapPicture) {
-        final int COMPRESSION_QUALITY = 100;
-        String encodedImage;
-        ByteArrayOutputStream byteArrayBitmapStream = new ByteArrayOutputStream();
-        bitmapPicture.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY,
-                byteArrayBitmapStream);
-        byte[] b = byteArrayBitmapStream.toByteArray();
-        encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
-        return encodedImage;
-    }
-
-    // from https://stackoverflow.com/questions/30818538/converting-json-object-with-bitmaps
-    private Bitmap getBitmapFromString(String stringPicture) {
-        byte[] decodedString = Base64.decode(stringPicture, Base64.DEFAULT);
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        return decodedByte;
-    }
 
 }
