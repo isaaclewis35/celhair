@@ -86,21 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     mPicView.setImageBitmap(kopec);
                 }
                 else{
-                    try {
-                        StringBuilder stringB = new StringBuilder();
-                        InputStream is = getAssets().open("tests/results.csv");
-                        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-                        String str;
-                        while ((str = br.readLine()) != null) {
-                            stringB.append(str);
-                        }
-                        br.close();
-                        Log.d("HAIR", stringB.toString());
-                        fileNames = stringB.toString().split(",");
-                        for(int j = 0; j < fileNames.length; j++){
-                            fileNames[j] = fileNames[j].trim();
-                            Log.d("HAIR", fileNames[j]);
-                        }
+                        loadTest();
                         Intent intent = recycler_activity.newIntent(getApplicationContext(), currentPhotoPath, "new_face", fileNames);
                         try {
                             startActivity(intent);
@@ -109,10 +95,6 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("FACE", "yo");
                             Log.d("FACE", "error",ex);
                         }
-                    }
-                    catch(Exception Ex){
-                        Ex.printStackTrace();
-                    }
                 }
 
 
@@ -146,7 +128,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //takePicture();
                 //dispatchTakePictureIntent();
-                Intent intent = recycler_activity.newIntent(getApplicationContext(),currentPhotoPath,"new_face", fileNames);
+                loadTest();
+                Intent intent = Loading.newIntent(getApplicationContext(),currentPhotoPath,"new_face", fileNames);
                 try {
                     startActivity(intent);
                 }
@@ -173,15 +156,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*
-    private void takePicture(){
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+    private void loadTest(){
+        try {
+            StringBuilder stringB = new StringBuilder();
+            InputStream is = getAssets().open("tests/results.csv");
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+            String str;
+            while ((str = br.readLine()) != null) {
+                stringB.append(str);
+            }
+            br.close();
+            Log.d("HAIR", stringB.toString());
+            fileNames = stringB.toString().split(",");
+            for(int j = 0; j < fileNames.length; j++){
+                fileNames[j] = fileNames[j].trim();
+                Log.d("HAIR", fileNames[j]);
+            }
         }
-        return;
+        catch(Exception Ex){
+            Ex.printStackTrace();
+        }
     }
-    */
+
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
