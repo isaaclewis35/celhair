@@ -61,7 +61,7 @@ public class recycler_activity extends AppCompatActivity {
         if (extras == null) {
             //rip
         } else {
-            photoPath = getIntent().getParcelableExtra("NEW_PIC");
+            photoPath = extras.getString("NEW_PIC");
             Bitmap bitmap = BitmapFactory.decodeFile(photoPath);
             newImage.setPic(bitmap);
             String tempString = extras.getString("PIC_NAME");

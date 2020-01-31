@@ -60,7 +60,7 @@ public class Loading extends AppCompatActivity {
         if (extras == null) {
             //rip
         } else {
-            currentPhotoPath = getIntent().getParcelableExtra("NEW_PIC");
+            currentPhotoPath = extras.getString("NEW_PIC");
             //Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
             //newImage.setPic(bitmap);
             String tempString = extras.getString("PIC_NAME");
