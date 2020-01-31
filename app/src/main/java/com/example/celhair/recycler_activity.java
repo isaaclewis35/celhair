@@ -46,6 +46,7 @@ public class recycler_activity extends AppCompatActivity {
     private HairAdapter mAdapter;
     private face_image newImage;
     private String[] mFileNames;
+    private String photoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +61,8 @@ public class recycler_activity extends AppCompatActivity {
         if (extras == null) {
             //rip
         } else {
-            String temp = getIntent().getParcelableExtra("NEW_PIC");
-            Bitmap bitmap = BitmapFactory.decodeFile(temp);
+            photoPath = getIntent().getParcelableExtra("NEW_PIC");
+            Bitmap bitmap = BitmapFactory.decodeFile(photoPath);
             newImage.setPic(bitmap);
             String tempString = extras.getString("PIC_NAME");
             newImage.setName(tempString);
@@ -136,6 +137,21 @@ public class recycler_activity extends AppCompatActivity {
             itemView.setOnClickListener(this);
 
             mHairImage = (ImageView) itemView.findViewById(R.id.hair_view);
+            mHairImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //takePicture();
+                    //dispatchTakePictureIntent();
+                    Intent intent = DisplayActivity.newIntent(getApplicationContext(),photoPath,"new_face", mFileNames);
+                    try {
+                        startActivity(intent);
+                    }
+                    catch(Exception ex){
+                        Log.d("FACE", "yo");
+                        Log.d("FACE", "error",ex);
+                    }
+                }
+            });
 
         }
 
