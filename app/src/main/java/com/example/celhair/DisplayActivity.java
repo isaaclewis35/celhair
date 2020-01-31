@@ -118,7 +118,7 @@ public class DisplayActivity extends AppCompatActivity {
             bmOptions.inSampleSize = scaleFactor;
             bmOptions.inPurgeable = true;
 
-            Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+            Bitmap bitmap = BitmapFactory.decodeFile("faces/"+currentPhotoPath, bmOptions);
             //mNewPicture = bitmap;
 
             //bitmap = getBitmapFromAsset(getApplicationContext(),"000001.jpg");

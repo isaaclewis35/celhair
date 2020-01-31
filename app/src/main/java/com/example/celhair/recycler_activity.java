@@ -142,7 +142,7 @@ public class recycler_activity extends AppCompatActivity {
                 public void onClick(View v) {
                     //takePicture();
                     //dispatchTakePictureIntent();
-                    Intent intent = DisplayActivity.newIntent(getApplicationContext(),photoPath,"new_face", mFileNames);
+                    Intent intent = DisplayActivity.newIntent(getApplicationContext(),mFaceImage.getName(),"new_face", mFileNames);
                     try {
                         startActivity(intent);
                     }
