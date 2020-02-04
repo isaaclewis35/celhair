@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.android.volley.Cache;
@@ -27,12 +28,19 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+//import okhttp3.Request;
+import okhttp3.RequestBody;
+//import okhttp3.Response;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 
 public class Loading extends AppCompatActivity {
+    private OkHttpClient mHTTPClient;
 
     private RequestQueue requestQueue;
 
@@ -51,9 +59,12 @@ public class Loading extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        Log.d("FACE", "here");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
+        mHTTPClient = new OkHttpClient();
+
+
 
 
         Bundle extras = getIntent().getExtras();
@@ -69,9 +80,22 @@ public class Loading extends AppCompatActivity {
 
         }
 
+        try{
+            Log.d("FACE",currentPhotoPath);
+        }
+        catch(Exception ex){
+            Log.d("FACE", ex.toString());
+        }
+
+        //Log.d("FACE", "hereHTTP");
+        LikeDislikeTask ldt = new LikeDislikeTask();
+        ldt.execute();
+
+        /*
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
+                Log.d("FACE", "hereHTTP");
                 Intent intent = recycler_activity.newIntent(getApplicationContext(),currentPhotoPath,"new_face", mFileNames);
                 try {
                     startActivity(intent);
@@ -82,7 +106,39 @@ public class Loading extends AppCompatActivity {
                 }
             }
         }, 3000);
+        */
 
+
+    }
+
+
+
+    private class LikeDislikeTask extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... voids) {
+            Log.d("CHIT", "hereHTTP");
+            okhttp3.Request request = new okhttp3.Request.Builder()
+                    //concatenates the like/dislike and message id into the url
+                    .url("https://davidrharvey.pythonanywhere.com/celhair/decode/getMatches?url=https://upload.wikimedia.org/wikipedia/commons/4/4e/Barry_OFarrell_(6820556283).jpg")
+                    .build();
+
+
+            try (okhttp3.Response response = mHTTPClient.newCall(request).execute()) {
+                return response.body().string();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.d("FACE", e.toString());
+                return "Error: Could not complete request.";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            Log.d("FACE", result);
+
+
+        }
 
 
     }

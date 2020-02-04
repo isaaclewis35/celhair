@@ -38,6 +38,8 @@ public class DisplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
 
+
+
         mPicView = (ImageView) findViewById(R.id.pictureView);
 
 
