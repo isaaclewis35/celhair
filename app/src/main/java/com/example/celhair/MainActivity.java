@@ -3,24 +3,19 @@ package com.example.celhair;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Network;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,20 +23,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import com.android.volley.Cache;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import static com.example.celhair.recycler_activity.getBitmapFromAsset;
 
@@ -76,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         //queue = Volley.newRequestQueue(this);
 
-        mPicView = (ImageView) findViewById(R.id.pictureView);
+        mPicView = (ImageView) findViewById(R.id.pictureView2);
         mPicView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View V){
@@ -230,6 +211,8 @@ public class MainActivity extends AppCompatActivity {
         // Get the dimensions of the View
         int targetW = imageView.getWidth();
         int targetH = imageView.getHeight();
+        Log.d("FACE", Integer.toString(targetW));
+        Log.d("FACE", Integer.toString(targetH));
 
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();

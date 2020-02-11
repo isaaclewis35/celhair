@@ -91,7 +91,7 @@ public class Loading extends AppCompatActivity {
         LikeDislikeTask ldt = new LikeDislikeTask();
         ldt.execute();
 
-        /*
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
@@ -106,7 +106,7 @@ public class Loading extends AppCompatActivity {
                 }
             }
         }, 3000);
-        */
+
 
 
     }

@@ -4,13 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 
 public class DisplayActivity extends AppCompatActivity {
@@ -19,6 +24,7 @@ public class DisplayActivity extends AppCompatActivity {
     private Button mShareButton;
     private Button mRecycle;
 
+    private String file;
     private String currentPhotoPath;
     private String[] mFileNames;
 
@@ -40,7 +46,7 @@ public class DisplayActivity extends AppCompatActivity {
 
 
 
-        mPicView = (ImageView) findViewById(R.id.pictureView);
+        mPicView = (ImageView) findViewById(R.id.pictureView2);
 
 
         mShareButton = (Button) findViewById(R.id.shareButton);
@@ -76,20 +82,18 @@ public class DisplayActivity extends AppCompatActivity {
         if (extras == null) {
             //rip
         } else {
-            Log.d("FACE","goddamn it bundle");
+
             currentPhotoPath = extras.getString("NEW_PIC");
             Log.d("FACE",currentPhotoPath);
             //Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
             //newImage.setPic(bitmap);
-            String theFile = extras.getString("PIC_NAME");
+            String pic = extras.getString("PIC_NAME");
             //newImage.setName(tempString);
             mFileNames = extras.getStringArray("FILE_NAMES");
-            try{
-                setPic(mPicView);
-            }
-            catch (Exception ex){
-                ex.printStackTrace();
-            }
+
+
+
+
 
 
         }
@@ -99,11 +103,40 @@ public class DisplayActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart(){
+
+        super.onStart();
+
+        Bitmap bitmap = getBitmapFromAsset(getApplicationContext(),"faces/"+currentPhotoPath);
+        mPicView.setImageBitmap(bitmap);
+
+
+        /*
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                try{
+                    Log.d("FACE","CURRENT PATH 1: " + currentPhotoPath);
+                    setPic(mPicView);
+                    Log.d("FACE","CURRENT PATH 2: " + currentPhotoPath);
+                }
+                catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        }, 3000);
+        */
+
+    }
+
     private void setPic(ImageView imageView) {
         try{
             // Get the dimensions of the View
             int targetW = imageView.getWidth();
             int targetH = imageView.getHeight();
+            Log.d("FACE", Integer.toString(targetW));
+            Log.d("FACE", Integer.toString(targetH));
 
             // Get the dimensions of the bitmap
             BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -120,6 +153,7 @@ public class DisplayActivity extends AppCompatActivity {
             bmOptions.inSampleSize = scaleFactor;
             bmOptions.inPurgeable = true;
 
+            Log.d("FACE", "CURRENT PATH: " + currentPhotoPath);
             Bitmap bitmap = BitmapFactory.decodeFile("faces/"+currentPhotoPath, bmOptions);
             //mNewPicture = bitmap;
 
@@ -127,9 +161,25 @@ public class DisplayActivity extends AppCompatActivity {
             imageView.setImageBitmap(bitmap);
         }
         catch (Exception ex){
+            Log.d("FACE",ex.toString());
             ex.printStackTrace();
         }
 
+    }
+
+    public static Bitmap getBitmapFromAsset(Context context, String filePath) {
+        AssetManager assetManager = context.getAssets();
+
+        InputStream istr;
+        Bitmap bitmap = null;
+        try {
+            istr = assetManager.open(filePath);
+            bitmap = BitmapFactory.decodeStream(istr);
+        } catch (IOException e) {
+            //Log.d("FACE", "oh god");
+        }
+
+        return bitmap;
     }
 
 

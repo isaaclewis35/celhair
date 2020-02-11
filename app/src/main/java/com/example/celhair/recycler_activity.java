@@ -93,7 +93,7 @@ public class recycler_activity extends AppCompatActivity {
             mBaseFace[x].setName(fileNames[x]);
             mBaseFace[x].setPic(faces_list[x]);
         }
-        Log.d("FACE","here");
+        //Log.d("FACE","here");
         updateFaces();
     }
     // adapted from https://stackoverflow.com/questions/8501309/android-get-bitmap-or-sound-from-assets
@@ -106,7 +106,7 @@ public class recycler_activity extends AppCompatActivity {
             istr = assetManager.open(filePath);
             bitmap = BitmapFactory.decodeStream(istr);
         } catch (IOException e) {
-            Log.d("FACE", "oh god");
+            //Log.d("FACE", "oh god");
         }
 
         return bitmap;
@@ -159,7 +159,7 @@ public class recycler_activity extends AppCompatActivity {
             mFaceImage = newFace;
 
             mHairImage.setImageBitmap(mFaceImage.getPic());
-            Log.d("FACE",mFaceImage.getName());
+            //Log.d("FACE",mFaceImage.getName());
         }
 
         @Override
