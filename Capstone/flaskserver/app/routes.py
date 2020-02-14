@@ -23,18 +23,29 @@ def getMatches():
     image.save("test.jpg")
     f.close
 
-    # Read the Features - To be updated to facemark, still using ORB atm
-    X_test = pd.DataFrame(columns=['Name','X_Coord', 'Y_Coord'])
+    # Read the Features - Updated to Facemark 
+    d = []
 
-    detector = cv.ORB_create(nfeatures=20)
-    key = detector.detect(cv.cvtColor(image, cv.COLOR_BGR2GRAY))
-    for p in key:
-        name = "0.jpg"
-        x = p.pt[0]
-        y = p.pt[1]
-        X_test = X_test.append({'Name': name,'X_Coord': x, 'Y_Coord': y}, ignore_index = True)
+    # create facemark detector and load lbf model:
+    facemark = cv.face.createFacemarkLBF()
+    facemark.loadModel("/static/lbfmodel.yaml")
 
+    # load cascade detector
+    cascade = cv.CascadeClassifier('/static/haarcascade_frontalface_alt.xml')
+    faces = cascade.detectMultiScale(image, 1.3, 5)
 
+    ok, landmarks = facemark.fit(image, faces)
+
+    imageName = "test.jpg"
+    if ok:
+        for marks in landmarks[0]:
+            for mark in marks:
+                d.append({'Image': imageName, 'X': mark[0], 'Y': mark[1]})
+                            
+    else:
+        print("Landmark DETECTION failed")
+
+    X_test = pd.DataFrame(d)
     # Run Label Encoder Over the Data
     for i in X_test:
         le = LabelEncoder()
@@ -43,7 +54,7 @@ def getMatches():
         X_test[i] = le.transform(X_test[i])
 
     # de-serialize static model.pkl file into an object called kmeans using pickle
-    with open('/static/model.pkl', 'rb') as handle:
+    with open('/static/model_facemark.pkl', 'rb') as handle:
         kmeans = pickle.load(handle)
 
     # Let X_test be the feature for which we want to predict the output
