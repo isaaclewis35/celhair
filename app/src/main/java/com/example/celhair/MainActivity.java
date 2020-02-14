@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -62,9 +64,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View V){
                 if(test == 0){
-                    test = 1;
-                    Bitmap kopec = getBitmapFromAsset(getApplicationContext(),"tests/DavidKopec.jpg");
-                    mPicView.setImageBitmap(kopec);
+                    //test = 1;
+                    //Bitmap kopec = getBitmapFromAsset(getApplicationContext(),"tests/DavidKopec.jpg");
+                    //mPicView.setImageBitmap(kopec);
+                    try{
+                        Picasso.get().load("http://10.0.2.2:5000/static/000001.jpg").into(mPicView);
+                    }
+                    catch(Exception ex){
+                        Log.d("FACE",ex.toString());
+                    }
+
+
                 }
                 else{
                         loadTest();
