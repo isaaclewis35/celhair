@@ -28,6 +28,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 //import okhttp3.Request;
@@ -38,6 +39,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 public class Loading extends AppCompatActivity {
     private OkHttpClient mHTTPClient;
@@ -87,11 +89,18 @@ public class Loading extends AppCompatActivity {
             Log.d("FACE", ex.toString());
         }
 
+
+        try{
+            LikeDislikeTask ldt = new LikeDislikeTask();
+            ldt.execute();
+        }
+        catch(Exception ex){
+            Log.d("FACE", ex.toString());
+        }
         //Log.d("FACE", "hereHTTP");
-        LikeDislikeTask ldt = new LikeDislikeTask();
-        ldt.execute();
 
 
+        /*
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
@@ -106,7 +115,7 @@ public class Loading extends AppCompatActivity {
                 }
             }
         }, 3000);
-
+        */
 
 
     }
@@ -116,21 +125,38 @@ public class Loading extends AppCompatActivity {
     private class LikeDislikeTask extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... voids) {
-            Log.d("CHIT", "hereHTTP");
-            okhttp3.Request request = new okhttp3.Request.Builder()
-                    //concatenates the like/dislike and message id into the url
-                    .url("https://davidrharvey.pythonanywhere.com/celhair/decode/getMatches?url=https://upload.wikimedia.org/wikipedia/commons/4/4e/Barry_OFarrell_(6820556283).jpg")
-                    .build();
+            try {
+                Log.d("CHIT", "hereHTTP");
+
+                File file = new File(currentPhotoPath);
+
+                RequestBody formBody = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("image", currentPhotoPath,
+                                RequestBody.create(MediaType.parse("image/jpg"),file))
+                        .build();
+
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                        //concatenates the like/dislike and message id into the url
+                        .url("http://10.0.2.2:5000/matches")
+                        .post(formBody)
+                        .build();
 
 
-            try (okhttp3.Response response = mHTTPClient.newCall(request).execute()) {
-                return response.body().string();
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.d("FACE", e.toString());
+                try (okhttp3.Response response = mHTTPClient.newCall(request).execute()) {
+                    return response.body().string();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("FACE", e.toString());
+                    return "Error: Could not complete request.";
+                }
+            }
+            catch(Exception ex){
+                Log.d("FACE", ex.toString());
                 return "Error: Could not complete request.";
             }
         }
+
 
         @Override
         protected void onPostExecute(String result) {

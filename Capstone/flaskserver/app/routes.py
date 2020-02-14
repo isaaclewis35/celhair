@@ -6,12 +6,22 @@ import pickle
 import cv2 as cv
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import LabelEncoder
+from flask import request
 
 @app.route('/')
+def does_it_work():
+    return 'It works!'
 @app.route('/matches', methods=['POST'])
 def getMatches():
+    print(request.headers)
+
+    print("getMatches Called")
     # Load the image as parameter from POST args
-    image = request.args.get('image')
+    image = request.files['image']
+    print(type(image))
+    f = open("test.jpg","w")
+    image.save("test.jpg")
+    f.close
 
     # Read the Features - To be updated to facemark, still using ORB atm
     X_test = pd.DataFrame(columns=['Name','X_Coord', 'Y_Coord'])
