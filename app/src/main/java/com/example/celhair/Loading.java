@@ -100,7 +100,7 @@ public class Loading extends AppCompatActivity {
         //Log.d("FACE", "hereHTTP");
 
 
-        /*
+        //
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
@@ -115,7 +115,7 @@ public class Loading extends AppCompatActivity {
                 }
             }
         }, 3000);
-        */
+        //
 
 
     }
