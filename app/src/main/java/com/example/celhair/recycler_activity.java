@@ -160,8 +160,9 @@ public class recycler_activity extends AppCompatActivity {
         public void bind(face_image newFace) {
             mFaceImage = newFace;
 
-            //mHairImage.setImageBitmap(mFaceImage.getPic());
-            Picasso.get().load("http://10.0.2.2:5000/static/" + mFaceImage.getName()).into(mHairImage);
+            mHairImage.setImageBitmap(mFaceImage.getPic());
+            Log.d("FACE", mFaceImage.getName());
+            //Picasso.get().load("http://10.0.2.2:5000/static/" + mFaceImage.getName()).into(mHairImage);
             //Log.d("FACE",mFaceImage.getName());
         }
 

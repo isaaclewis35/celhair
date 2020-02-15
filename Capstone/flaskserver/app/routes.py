@@ -28,10 +28,10 @@ def getMatches():
 
     # create facemark detector and load lbf model:
     facemark = cv.face.createFacemarkLBF()
-    facemark.loadModel("/static/lbfmodel.yaml")
+    facemark.loadModel("lbfmodel.yaml")
 
     # load cascade detector
-    cascade = cv.CascadeClassifier('/static/haarcascade_frontalface_alt.xml')
+    cascade = cv.CascadeClassifier('haarcascade_frontalface_alt.xml')
     faces = cascade.detectMultiScale(image, 1.3, 5)
 
     ok, landmarks = facemark.fit(image, faces)
@@ -54,7 +54,7 @@ def getMatches():
         X_test[i] = le.transform(X_test[i])
 
     # de-serialize static model.pkl file into an object called kmeans using pickle
-    with open('/static/model_facemark.pkl', 'rb') as handle:
+    with open('model_facemark.pkl', 'rb') as handle:
         kmeans = pickle.load(handle)
 
     # Let X_test be the feature for which we want to predict the output
