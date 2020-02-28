@@ -138,7 +138,8 @@ public class Loading extends AppCompatActivity {
 
                 okhttp3.Request request = new okhttp3.Request.Builder()
                         //concatenates the like/dislike and message id into the url
-                        .url("http://10.0.2.2:5000/matches")
+                        //.url("http://10.0.2.2:5000/matches")
+                        .url("http://ec2-3-18-225-17.us-east-2.compute.amazonaws.com:5000/matches")
                         .post(formBody)
                         .build();
 
