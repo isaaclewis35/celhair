@@ -11,7 +11,7 @@ from os.path import isfile, join
 from mpl_toolkits.mplot3d import Axes3D
 
 # Load Image Features - Running OpenCV Feature dectection over every file in given directory
-mypath = "training_images"
+mypath = "training_images_large"
 
 d = []
 key = []
@@ -40,7 +40,7 @@ for n in range(0, len(onlyfiles)):
         if ok:
             for marks in landmarks[0]:
                 for mark in marks:
-                    currentImage.append({mark[0],mark[1]})
+                    currentImage.append(np.array(mark[0],mark[1]))
 
             d.append(currentImage)
             key.append(imageName)
@@ -52,45 +52,56 @@ for n in range(0, len(onlyfiles)):
         print("Landmark APPEND failed on image: ", imageName)
 
 
-# Turn data into dataframe for kmeans
-df = pd.DataFrame(d)
-#print(df)
+# Turn data into numpy array for kmeans
+df = np.array(d)
 
-# Run Label Encoder Over the Data
-print("Done loading images!")
-for image in df:
-    for point in df.iloc[image,:]:
-        x = np.asarray(point)
-        #le = LabelEncoder()
-        print(type(x))
-        print(x)
-        #le.fit(x)
-        #df.iloc[image,:] = le.transform(x)
-        x = x.reshape(1,-1)
-        print(type(x))
-        print(x)
-        hot = OneHotEncoder()
-        df.iloc[image,:] = hot.fit_transform(x)
 
 # Run K Means
 kmeans = KMeans(n_clusters=20, n_init=20, precompute_distances='auto',verbose=1, algorithm='auto')
 kmeans.fit(df)
 
-labels = kmeans.predict(df)
-
-# in d we store the original data, key has the name of the image
-clusters = {}
-n = 0
-for item in labels:
-    if item in clusters:
-        clusters[item].append(d[n])
-    else:
-        clusters[item] = [key[n]]
-    n +=1
+# Dump Model to Pickle File
+with open('model_updated.pkl', 'wb') as model_file:
+  pickle.dump(kmeans, model_file, protocol=2)
 
 
-for item in clusters:
-    print("Cluster ", item)
-    for i in clusters[item]:
-        print(i)
+
+##############################################
+
+# Load the image 
+image = cv.imread("DavidKopec.jpg") 
+imageName = "DavidKopec.jpg"
+# Read the Features
+d = []
+
+# Run landmark detector:
+faces = cascade.detectMultiScale(image, 1.3, 5)
+ok, landmarks = facemark.fit(image, faces)
         
+# Extract Landmark data 
+if ok:
+    for marks in landmarks[0]:
+        for mark in marks:
+            d.append(np.array(mark[0],mark[1]))
+                        
+else:
+    print("Landmark DETECTION failed on image: ", imageName)
+                        
+
+X_test = np.array(d)
+X_test = X_test.reshape(1, -1)
+
+# Let X_test be the feature for which we want to predict the output
+# Get the cluster the image is predicted to fit into
+result = int(kmeans.predict(X_test))
+print("result:", result)
+
+# Get the results of that cluster
+result_cluster = np.where(kmeans.labels_ == result)[0]
+print("result_cluster:", result_cluster)
+
+result_images = []
+for i in range(5):
+    result_images.append(str(result_cluster[i]).zfill(6) + ".jpg")
+
+print(result_images)
