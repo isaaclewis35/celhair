@@ -11,7 +11,6 @@ from os.path import isfile, join
 from mpl_toolkits.mplot3d import Axes3D
 
 # Load Image Features - Running OpenCV Feature dectection over every file in given directory
-#mypath = "test_set"
 mypath = "training_images_large"
 
 d = []
@@ -53,10 +52,8 @@ for n in range(0, len(onlyfiles)):
         print("Landmark APPEND failed on image: ", imageName)
 
 
-# Turn data into dataframe for kmeans
-#df = pd.DataFrame(d)
+# Turn data into numpy array for kmeans
 df = np.array(d)
-#print(df)
 
 
 # Run K Means
@@ -64,5 +61,47 @@ kmeans = KMeans(n_clusters=20, n_init=20, precompute_distances='auto',verbose=1,
 kmeans.fit(df)
 
 # Dump Model to Pickle File
-with open('model_facemark.pkl', 'wb') as model_file:
+with open('model_updated.pkl', 'wb') as model_file:
   pickle.dump(kmeans, model_file, protocol=2)
+
+
+
+##############################################
+
+# Load the image 
+image = cv.imread("DavidKopec.jpg") 
+imageName = "DavidKopec.jpg"
+# Read the Features
+d = []
+
+# Run landmark detector:
+faces = cascade.detectMultiScale(image, 1.3, 5)
+ok, landmarks = facemark.fit(image, faces)
+        
+# Extract Landmark data 
+if ok:
+    for marks in landmarks[0]:
+        for mark in marks:
+            d.append(np.array(mark[0],mark[1]))
+                        
+else:
+    print("Landmark DETECTION failed on image: ", imageName)
+                        
+
+X_test = np.array(d)
+X_test = X_test.reshape(1, -1)
+
+# Let X_test be the feature for which we want to predict the output
+# Get the cluster the image is predicted to fit into
+result = int(kmeans.predict(X_test))
+print("result:", result)
+
+# Get the results of that cluster
+result_cluster = np.where(kmeans.labels_ == result)[0]
+print("result_cluster:", result_cluster)
+
+result_images = []
+for i in range(5):
+    result_images.append(str(result_cluster[i]).zfill(6) + ".jpg")
+
+print(result_images)
