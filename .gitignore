@@ -13,4 +13,3 @@
 .externalNativeBuild
 .cxx
 app/src/main/assets/faces/*.jpg
-Capstone/flaskserver/app/static/*.jpg
