@@ -43,18 +43,24 @@ def getMatches():
     # Load cascade detector
     cascade = cv.CascadeClassifier('haarcascade_frontalface_alt.xml')
 
-    # Run landmark detector:
-    faces = cascade.detectMultiScale(image, 1.3, 5)
-    ok, landmarks = facemark.fit(image, faces)
-            
-    # Extract Landmark data 
-    if ok:
-        for marks in landmarks[0]:
-            for mark in marks:
-                d.append(np.array(mark[0],mark[1]))
-                            
-    else:
-        print("Landmark DETECTION failed on image: ", imageName)
+
+    try:
+        # Run landmark detector:
+        faces = cascade.detectMultiScale(image, 1.3, 5)
+
+        ok, landmarks = facemark.fit(image, faces)
+                
+        # Extract Landmark data 
+        if ok:
+            for marks in landmarks[0]:
+                for mark in marks:
+                    d.append(np.array(mark[0],mark[1]))
+                                
+        else:
+            print("Landmark DETECTION failed on image: ", imageName)
+
+    except:
+        return "THIS IS AN ERROR STRING AAAA"
                             
 
     X_test = np.array(d)
