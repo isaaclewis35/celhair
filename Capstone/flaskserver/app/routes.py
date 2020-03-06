@@ -24,13 +24,13 @@ def getMatches():
     f.close
 
     # Setting to the right dimensions 
-    print('Original Dimensions : ',image.shape)
+    #print('Original Dimensions : ',image.shape)
     width = 178
     height = 218
     dim = (width, height)
     # resize image
     image = cv.resize(image, dim, interpolation = cv.INTER_AREA)
-    print('Resized Dimensions : ',image.shape)
+    #print('Resized Dimensions : ',image.shape)
 
     # Read the Features
     d = []
