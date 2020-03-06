@@ -76,7 +76,13 @@ def getMatches():
     for i in range(20):
         result_images.append(str(result_cluster[i]).zfill(6) + ".jpg")
 
-    print(result_images)
+    #print(result_images)
+
+    final = ""
+    for i in result_images:
+        final = final + " " + i
+
+    print(final)
 
     # Return names of result cluster image in json dump
-    return result_images
+    return final
