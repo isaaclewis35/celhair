@@ -79,4 +79,4 @@ def getMatches():
     print(result_images)
 
     # Return names of result cluster image in json dump
-    return json.dumps(result_images)
+    return result_images
