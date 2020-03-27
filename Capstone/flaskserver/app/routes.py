@@ -60,7 +60,7 @@ def getMatches():
 
     except:
         print("Did not detect a face! Try looking right at the camera.")
-        pass
+        return ("NO")
                             
 
     X_test = np.array(d)
