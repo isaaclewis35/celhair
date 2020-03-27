@@ -79,7 +79,7 @@ def getMatches():
     result_cluster = np.where(kmeans.labels_ == result)[0]
 
     result_images = []
-    for i in range(20):
+    for i in range((np.where(kmeans.labels_ == result_cluster)[0])):
         result_images.append(str(result_cluster[i]).zfill(6) + ".jpg")
 
     #print(result_images)

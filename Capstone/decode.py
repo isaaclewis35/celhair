@@ -30,6 +30,8 @@ mypath = "training_images_large"
 image = cv.imread("DavidKopec.jpg") 
 imageName = "DavidKopec.jpg"
 
+cv.imshow("testing image", image)
+
 image = resizeImage(image)
 
 # Read the Features
@@ -42,23 +44,20 @@ facemark.loadModel("lbfmodel.yaml")
 # Load cascade detector
 cascade = cv.CascadeClassifier('haarcascade_frontalface_alt.xml')
 
-try:
-	# Run landmark detector:
-	faces = cascade.detectMultiScale(image, 1.3, 5)
-	ok, landmarks = facemark.fit(image, faces)
+# Run landmark detector:
+faces = cascade.detectMultiScale(image, 1.3, 5)
+ok, landmarks = facemark.fit(image, faces)
 	        
-	# Extract Landmark data 
-	if ok:
-	    for marks in landmarks[0]:
-	        for mark in marks:
-	            d.append(np.array(mark[0],mark[1]))
-	                        
-	else:
-	    print("Landmark DETECTION failed on image: ", imageName)
+# Extract Landmark data 
+if ok:
+    for marks in landmarks[0]:
+        for mark in marks:
+            d.append(np.array(mark[0],mark[1]))
+                        
+else:
+    print("Landmark DETECTION failed on image: ", imageName)
 
-except:
-	print("Did not detect a face! Try looking right at the camera.")
-	pass
+
 	                        
 
 X_test = np.array(d)
@@ -74,8 +73,14 @@ print("Result Cluster: #", result)
 # Get the results of that cluster
 result_cluster = np.where(kmeans.labels_ == result)[0]
 
+
+cluster = (np.where(kmeans.labels_ == result_cluster)[0])
+
+pritn(cluster)
+
 result_images = []
-for i in range(20):
-    result_images.append(str(result_cluster[i]).zfill(6) + ".jpg")
+for i in range(cluster):
+	result_images.append(str(result_cluster[i]).zfill(6) + ".jpg")
+
 
 print(result_images)
