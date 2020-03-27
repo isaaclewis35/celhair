@@ -27,6 +27,7 @@ import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -101,6 +102,7 @@ public class Loading extends AppCompatActivity {
 
 
         //
+        /*
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
@@ -115,7 +117,7 @@ public class Loading extends AppCompatActivity {
                 }
             }
         }, 3000);
-        //
+        */
 
 
     }
@@ -163,6 +165,25 @@ public class Loading extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             Log.d("FACE", result);
+
+            int duration = Toast.LENGTH_LONG;
+
+            Toast toast = Toast.makeText(getApplicationContext(),result,duration);
+            toast.show();
+
+            mFileNames = result.split(" ");
+
+            toast = Toast.makeText(getApplicationContext(),mFileNames[0],duration);
+            toast.show();
+
+            Intent intent = recycler_activity.newIntent(getApplicationContext(),currentPhotoPath,"new_face", mFileNames);
+            try {
+                startActivity(intent);
+            }
+            catch(Exception ex){
+                Log.d("FACE", "yo");
+                Log.d("FACE", "error",ex);
+            }
 
 
         }
