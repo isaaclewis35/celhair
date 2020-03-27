@@ -14,6 +14,7 @@ def resizeImage(image):
 	dim = (width, height)
 	image = cv.resize(image, dim, interpolation = cv.INTER_AREA)
 	print('Resized Dimensions : ',image.shape)
+	return image
 
 
 def loadModel(modelName):
@@ -26,15 +27,10 @@ def loadModel(modelName):
 mypath = "training_images_large"
 
 # Load the image 
-image = cv.imread("pog.jpg") 
+image = cv.imread("DavidKopec.jpg") 
 imageName = "DavidKopec.jpg"
 
-print('Original Dimensions : ',image.shape)
-width = 178
-height = 218
-dim = (width, height)
-image = cv.resize(image, dim, interpolation = cv.INTER_AREA)
-print('Resized Dimensions : ',image.shape)
+image = resizeImage(image)
 
 # Read the Features
 d = []
