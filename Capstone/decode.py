@@ -7,6 +7,21 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import LabelEncoder
 
 
+def resizeImage(image):
+	print('Original Dimensions : ',image.shape)
+	width = 178
+	height = 218
+	dim = (width, height)
+	image = cv.resize(image, dim, interpolation = cv.INTER_AREA)
+	print('Resized Dimensions : ',image.shape)
+
+
+def loadModel(modelName):
+	# De-serialize static model.pkl file into an object called kmeans using pickle
+	with open(modelName, 'rb') as model:
+	    return pickle.load(model)
+
+
 # Path for result images
 mypath = "training_images_large"
 
@@ -14,15 +29,7 @@ mypath = "training_images_large"
 image = cv.imread("DavidKopec.jpg") 
 imageName = "DavidKopec.jpg"
 
-
-print('Original Dimensions : ',image.shape)
- 
-width = 178
-height = 218
-dim = (width, height)
-# resize image
-image = cv.resize(image, dim, interpolation = cv.INTER_AREA)
-print('Resized Dimensions : ',image.shape)
+image = resizeImage(image)
 
 # Read the Features
 d = []
@@ -51,9 +58,7 @@ else:
 X_test = np.array(d)
 X_test = X_test.reshape(1, -1)
 
-# De-serialize static model.pkl file into an object called kmeans using pickle
-with open('model_updated.pkl', 'rb') as model:
-    kmeans = pickle.load(model)
+kmeans = loadModel('model_updated.pkl')
 
 # Let X_test be the feature for which we want to predict the output
 # Get the cluster the image is predicted to fit into

@@ -60,7 +60,7 @@ def getMatches():
             print("Landmark DETECTION failed on image: ", imageName)
 
     except:
-        return "THIS IS AN ERROR STRING AAAA"
+        return "Did not detect a face! Try looking right at the camera."
                             
 
     X_test = np.array(d)
