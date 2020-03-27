@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import java.lang.String;
+
 import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -170,6 +172,8 @@ public class Loading extends AppCompatActivity {
 
             Toast toast = Toast.makeText(getApplicationContext(),result,duration);
             toast.show();
+
+            result = result.trim();
 
             mFileNames = result.split(" ");
 
