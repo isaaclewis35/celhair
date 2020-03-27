@@ -26,10 +26,15 @@ def loadModel(modelName):
 mypath = "training_images_large"
 
 # Load the image 
-image = cv.imread("000120.jpg") 
+image = cv.imread("pog.jpg") 
 imageName = "DavidKopec.jpg"
 
-image = resizeImage(image)
+print('Original Dimensions : ',image.shape)
+width = 178
+height = 218
+dim = (width, height)
+image = cv.resize(image, dim, interpolation = cv.INTER_AREA)
+print('Resized Dimensions : ',image.shape)
 
 # Read the Features
 d = []
@@ -56,8 +61,8 @@ try:
 	    print("Landmark DETECTION failed on image: ", imageName)
 
 except:
-	return "Did not detect a face! Try looking right at the camera."
-    pass
+	print("Did not detect a face! Try looking right at the camera.")
+	pass
 	                        
 
 X_test = np.array(d)

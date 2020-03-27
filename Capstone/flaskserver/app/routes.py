@@ -66,7 +66,7 @@ def getMatches():
             print("Landmark DETECTION failed on image: ", imageName)
 
     except:
-        return "Did not detect a face! Try looking right at the camera."
+        print("Did not detect a face! Try looking right at the camera.")
         pass
                                 
 
