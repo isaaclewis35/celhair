@@ -67,7 +67,7 @@ def getMatches():
     X_test = X_test.reshape(1, -1)
 
     # De-serialize static model.pkl file into an object called kmeans using pickle
-    with open('model_updated.pkl', 'rb') as model:
+    with open('model_100_clusters.pkl', 'rb') as model:
         kmeans = pickle.load(model)
 
     # Let X_test be the feature for which we want to predict the output
