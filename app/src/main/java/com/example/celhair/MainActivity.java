@@ -3,9 +3,12 @@ package com.example.celhair;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -47,7 +50,11 @@ public class MainActivity extends AppCompatActivity {
     private ImageView mPicView;
     String currentPhotoPath;
 
+    public static Intent newIntent(Context packageContext) {
 
+        Intent intent = new Intent(packageContext, MainActivity.class);
+        return intent;
+    }
 
 
     @Override
@@ -242,8 +249,12 @@ public class MainActivity extends AppCompatActivity {
         Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
         mNewPicture = bitmap;
 
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(mNewPicture, 0, 0, mNewPicture.getWidth(), mNewPicture.getHeight(), matrix, true);
+
         //bitmap = getBitmapFromAsset(getApplicationContext(),"000001.jpg");
-        imageView.setImageBitmap(bitmap);
+        imageView.setImageBitmap(rotatedBitmap);
     }
 
 

@@ -18,6 +18,7 @@ import org.bytedeco.opencv.opencv_features2d.*;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -49,6 +50,7 @@ public class recycler_activity extends AppCompatActivity {
     private face_image newImage;
     private String[] mFileNames;
     private String photoPath;
+    private Button mReset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,23 @@ public class recycler_activity extends AppCompatActivity {
         mHairRecycler = (RecyclerView) findViewById(R.id.hair_recycler_view);
         mHairRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         newImage = new face_image();
+
+        mReset = (Button) findViewById(R.id.hair_button);
+        mReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = MainActivity.newIntent(getApplicationContext());
+                try {
+                    startActivity(intent);
+                }
+                catch(Exception ex){
+                    Log.d("FACE", "yo");
+                    Log.d("FACE", "error",ex);
+                }
+            }
+        });
+
+
 
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
