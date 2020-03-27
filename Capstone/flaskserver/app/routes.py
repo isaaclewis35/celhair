@@ -73,7 +73,7 @@ def getMatches():
     X_test = np.array(d)
     X_test = X_test.reshape(1, -1)
 
-    kmeans = loadModel('model_100_clusters.pkl')
+    kmeans = loadModel('model_updated.pkl')
 
     # Let X_test be the feature for which we want to predict the output
     # Get the cluster the image is predicted to fit into
