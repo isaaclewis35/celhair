@@ -57,11 +57,11 @@ df = np.array(d)
 
 
 # Run K Means
-kmeans = KMeans(n_clusters=20, n_init=20, precompute_distances='auto',verbose=1, algorithm='auto')
+kmeans = KMeans(n_clusters=50, n_init=20, precompute_distances='auto',verbose=1, algorithm='auto')
 kmeans.fit(df)
 
 # Dump Model to Pickle File
-with open('model_updated.pkl', 'wb') as model_file:
+with open('model_50_clusters.pkl', 'wb') as model_file:
   pickle.dump(kmeans, model_file, protocol=2)
 
 
