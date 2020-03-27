@@ -8,21 +8,6 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import LabelEncoder
 from flask import request
 
-def resizeImage(image):
-    print('Original Dimensions : ',image.shape)
-    width = 178
-    height = 218
-    dim = (width, height)
-    image = cv.resize(image, dim, interpolation = cv.INTER_AREA)
-    print('Resized Dimensions : ',image.shape)
-
-
-def loadModel(modelName):
-    # De-serialize static model.pkl file into an object called kmeans using pickle
-    with open(modelName, 'rb') as model:
-        return pickle.load(model)
-
-
 @app.route('/')
 def does_it_work():
     return 'It works!'
@@ -39,7 +24,14 @@ def getMatches():
     f.close
 
     image = cv.imread("test.jpg") 
-    image = resizeImage(image)
+    # Setting to the right dimensions 
+    print('Original Dimensions : ',image.shape)
+    width = 178
+    height = 218
+    dim = (width, height)
+    # resize image
+    image = cv.resize(image, dim, interpolation = cv.INTER_AREA)
+    print('Resized Dimensions : ',image.shape)
 
     # Read the Features
     d = []
@@ -50,6 +42,7 @@ def getMatches():
 
     # Load cascade detector
     cascade = cv.CascadeClassifier('haarcascade_frontalface_alt.xml')
+
 
     try:
         # Run landmark detector:
@@ -68,12 +61,14 @@ def getMatches():
     except:
         print("Did not detect a face! Try looking right at the camera.")
         pass
-                                
+                            
 
     X_test = np.array(d)
     X_test = X_test.reshape(1, -1)
 
-    kmeans = loadModel('model_updated.pkl')
+    # De-serialize static model.pkl file into an object called kmeans using pickle
+    with open('model_updated.pkl', 'rb') as model:
+        kmeans = pickle.load(model)
 
     # Let X_test be the feature for which we want to predict the output
     # Get the cluster the image is predicted to fit into
