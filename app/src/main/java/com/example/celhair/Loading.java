@@ -175,6 +175,20 @@ public class Loading extends AppCompatActivity {
 
             result = result.trim();
 
+            if(result == "NO"){
+                toast = Toast.makeText(getApplicationContext(),"Face not recognized, please try again",duration);
+                toast.show();
+
+                Intent intent = MainActivity.newIntent(getApplicationContext());
+                try {
+                    startActivity(intent);
+                }
+                catch(Exception ex){
+                    Log.d("FACE", "yo");
+                    Log.d("FACE", "error",ex);
+                }
+            }
+
             mFileNames = result.split(" ");
 
             toast = Toast.makeText(getApplicationContext(),mFileNames[0],duration);
