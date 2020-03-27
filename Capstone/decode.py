@@ -26,7 +26,7 @@ def loadModel(modelName):
 mypath = "training_images_large"
 
 # Load the image 
-image = cv.imread("DavidKopec.jpg") 
+image = cv.imread("000120.jpg") 
 imageName = "DavidKopec.jpg"
 
 image = resizeImage(image)
@@ -41,24 +41,29 @@ facemark.loadModel("lbfmodel.yaml")
 # Load cascade detector
 cascade = cv.CascadeClassifier('haarcascade_frontalface_alt.xml')
 
-# Run landmark detector:
-faces = cascade.detectMultiScale(image, 1.3, 5)
-ok, landmarks = facemark.fit(image, faces)
-        
-# Extract Landmark data 
-if ok:
-    for marks in landmarks[0]:
-        for mark in marks:
-            d.append(np.array(mark[0],mark[1]))
-                        
-else:
-    print("Landmark DETECTION failed on image: ", imageName)
-                        
+try:
+	# Run landmark detector:
+	faces = cascade.detectMultiScale(image, 1.3, 5)
+	ok, landmarks = facemark.fit(image, faces)
+	        
+	# Extract Landmark data 
+	if ok:
+	    for marks in landmarks[0]:
+	        for mark in marks:
+	            d.append(np.array(mark[0],mark[1]))
+	                        
+	else:
+	    print("Landmark DETECTION failed on image: ", imageName)
+
+except:
+	return "Did not detect a face! Try looking right at the camera."
+    pass
+	                        
 
 X_test = np.array(d)
 X_test = X_test.reshape(1, -1)
 
-kmeans = loadModel('model_updated.pkl')
+kmeans = loadModel('model_100_clusters.pkl')
 
 # Let X_test be the feature for which we want to predict the output
 # Get the cluster the image is predicted to fit into
