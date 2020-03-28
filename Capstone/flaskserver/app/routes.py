@@ -67,7 +67,7 @@ def getMatches():
     X_test = X_test.reshape(1, -1)
 
     # De-serialize static model.pkl file into an object called kmeans using pickle
-    with open('model_50_clusters.pkl', 'rb') as model:
+    with open('model_10k.pkl', 'rb') as model:
         kmeans = pickle.load(model)
 
     # Let X_test be the feature for which we want to predict the output
@@ -79,8 +79,16 @@ def getMatches():
     result_cluster = np.where(kmeans.labels_ == result)[0]
 
     result_images = []
-    for i in range((np.where(kmeans.labels_ == result_cluster)[0])):
-        result_images.append(str(result_cluster[i]).zfill(6) + ".jpg")
+    #for i in range(20):
+    #    result_images.append(str(result_cluster[i]).zfill(6) + ".jpg")
+
+    max = 20
+    count = 0
+    for result in result_cluster:
+    	result_images.append(str(result).zfill(6) + ".jpg")
+    	count = count + 1
+    	if count > max:
+    		break
 
     #print(result_images)
 
