@@ -49,7 +49,7 @@ public class DisplayActivity extends AppCompatActivity {
         mPicView = (ImageView) findViewById(R.id.pictureView2);
 
 
-        mShareButton = (Button) findViewById(R.id.shareButton);
+        //mShareButton = (Button) findViewById(R.id.shareButton);
         /*
         mShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
