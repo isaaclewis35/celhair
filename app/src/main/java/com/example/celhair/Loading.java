@@ -175,7 +175,7 @@ public class Loading extends AppCompatActivity {
 
             result = result.trim();
 
-            if(result == "NO"){
+            if(result.equals("NO")){
                 toast = Toast.makeText(getApplicationContext(),"Face not recognized, please try again",duration);
                 toast.show();
 
@@ -188,20 +188,23 @@ public class Loading extends AppCompatActivity {
                     Log.d("FACE", "error",ex);
                 }
             }
+            else{
+                mFileNames = result.split(" ");
 
-            mFileNames = result.split(" ");
+                toast = Toast.makeText(getApplicationContext(),mFileNames[0],duration);
+                toast.show();
 
-            toast = Toast.makeText(getApplicationContext(),mFileNames[0],duration);
-            toast.show();
-
-            Intent intent = recycler_activity.newIntent(getApplicationContext(),currentPhotoPath,"new_face", mFileNames);
-            try {
-                startActivity(intent);
+                Intent intent = recycler_activity.newIntent(getApplicationContext(),currentPhotoPath,"new_face", mFileNames);
+                try {
+                    startActivity(intent);
+                }
+                catch(Exception ex){
+                    Log.d("FACE", "yo");
+                    Log.d("FACE", "error",ex);
+                }
             }
-            catch(Exception ex){
-                Log.d("FACE", "yo");
-                Log.d("FACE", "error",ex);
-            }
+
+
 
 
         }

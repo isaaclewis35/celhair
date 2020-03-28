@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -108,8 +110,9 @@ public class DisplayActivity extends AppCompatActivity {
 
         super.onStart();
 
-        Bitmap bitmap = getBitmapFromAsset(getApplicationContext(),"faces/"+currentPhotoPath);
-        mPicView.setImageBitmap(bitmap);
+        //Bitmap bitmap = getBitmapFromAsset(getApplicationContext(),"faces/"+currentPhotoPath);
+        //mPicView.setImageBitmap(bitmap);
+        Picasso.get().load("http://ec2-3-18-225-17.us-east-2.compute.amazonaws.com:5000/static/" + currentPhotoPath).into(mPicView);
 
 
         /*
