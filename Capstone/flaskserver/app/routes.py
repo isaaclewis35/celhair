@@ -86,7 +86,7 @@ def getMatches():
     count = 0
     for result in result_cluster:
     	result_images.append(str(result).zfill(6) + ".jpg")
-    	count++
+    	count = count + 1
     	if count > max:
     		break
 
