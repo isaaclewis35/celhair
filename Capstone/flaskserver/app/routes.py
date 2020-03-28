@@ -79,8 +79,16 @@ def getMatches():
     result_cluster = np.where(kmeans.labels_ == result)[0]
 
     result_images = []
-    for i in range(20):
-        result_images.append(str(result_cluster[i]).zfill(6) + ".jpg")
+    #for i in range(20):
+    #    result_images.append(str(result_cluster[i]).zfill(6) + ".jpg")
+
+    max = 20
+    count = 0
+    for result in result_cluster:
+    	result_images.append(str(result).zfill(6) + ".jpg")
+    	count++
+    	if count > max:
+    		break
 
     #print(result_images)
 
