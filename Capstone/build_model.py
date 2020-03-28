@@ -11,13 +11,13 @@ from os.path import isfile, join
 from mpl_toolkits.mplot3d import Axes3D
 
 # Load Image Features - Running OpenCV Feature dectection over every file in given directory
-mypath = "training_images_large"
+mypath = "test_set_10k"
 
 d = []
 key = []
 
 # Open cascade classifier:
-cascade = cv.CascadeClassifier('C:/OpenCV/sources/data/haarcascades/haarcascade_frontalface_alt.xml')
+cascade = cv.CascadeClassifier('haarcascade_frontalface_alt.xml')
 
 # create facemark detector and load lbf model:
 facemark = cv.face.createFacemarkLBF()
@@ -57,11 +57,11 @@ df = np.array(d)
 
 
 # Run K Means
-kmeans = KMeans(n_clusters=50, n_init=20, precompute_distances='auto',verbose=1, algorithm='auto')
+kmeans = KMeans(n_clusters=100, n_init=20, precompute_distances='auto',verbose=1, algorithm='auto')
 kmeans.fit(df)
 
 # Dump Model to Pickle File
-with open('model_50_clusters.pkl', 'wb') as model_file:
+with open('model_10k.pkl', 'wb') as model_file:
   pickle.dump(kmeans, model_file, protocol=2)
 
 
