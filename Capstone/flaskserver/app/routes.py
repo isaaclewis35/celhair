@@ -82,7 +82,8 @@ def getMatches():
     
     # If the cluster is too small, add results from the next closest cluster
     if (result_cluster.size < 20):
-        result_cluster += np.where(kmeans.labels_ == (result+1))[0]
+        next_cluster = np.where(kmeans.labels_ == (result+1))[0]
+        result_cluster = np.append(result_cluster,next_cluster)
 
     for i in range(result_cluster.size):
         result_images.append(str(result_cluster[i]).zfill(6) + ".jpg")
