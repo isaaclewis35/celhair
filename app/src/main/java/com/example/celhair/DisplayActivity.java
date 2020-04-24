@@ -8,6 +8,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -16,8 +17,11 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 
 
 public class DisplayActivity extends AppCompatActivity {
@@ -65,7 +69,24 @@ public class DisplayActivity extends AppCompatActivity {
         mRecycle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = Loading.newIntent(getApplicationContext(),currentPhotoPath,"new_face", mFileNames);
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "http://ec2-3-18-225-17.us-east-2.compute.amazonaws.com:5000/static/" + currentPhotoPath);
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
+            }
+        });
+
+        mShareButton = (Button) findViewById(R.id.pictureButton);
+        mShareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap temp = getBitmapFromURL("http://ec2-3-18-225-17.us-east-2.compute.amazonaws.com:5000/static/" + currentPhotoPath);
+                String filePath = saveBitmap(temp);
+
+                Intent intent = Loading.newIntent(getApplicationContext(),filePath,"new_face", mFileNames);
                 try {
                     startActivity(intent);
                 }
@@ -77,6 +98,9 @@ public class DisplayActivity extends AppCompatActivity {
                 //placeholder
             }
         });
+
+
+
 
 
 
@@ -93,17 +117,48 @@ public class DisplayActivity extends AppCompatActivity {
             //newImage.setName(tempString);
             mFileNames = extras.getStringArray("FILE_NAMES");
 
-
-
-
-
-
         }
 
-
-
-
     }
+    //https://stackoverflow.com/questions/18210700/best-method-to-download-image-from-url-in-android
+    public Bitmap getBitmapFromURL(String src) {
+        try {
+            java.net.URL url = new java.net.URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String saveBitmap(Bitmap bmp){
+        try{
+            String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                    "/faceFiles";
+            File dir = new File(file_path);
+            if(!dir.exists())
+                dir.mkdirs();
+            File file = new File(dir, "pic" + currentPhotoPath + ".jpg");
+            FileOutputStream fOut = new FileOutputStream(file);
+
+            bmp.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+            fOut.flush();
+            fOut.close();
+            String filePath = file.getAbsolutePath();
+            return filePath;
+        }
+        catch(Exception ex){
+            Log.d("FACE", ex.toString());
+        }
+        return("uh oh");
+    }
+
 
     @Override
     protected void onStart(){

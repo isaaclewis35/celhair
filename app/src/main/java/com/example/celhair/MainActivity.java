@@ -248,15 +248,30 @@ public class MainActivity extends AppCompatActivity {
 
         Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
         mNewPicture = bitmap;
-
+        int degree = 90;
+        try{
+            //https://stackoverflow.com/questions/7286714/android-get-orientation-of-a-camera-bitmap-and-rotate-back-90-degrees
+            ExifInterface exif = new ExifInterface(currentPhotoPath);
+            degree = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            degree = exifToDegrees(degree);
+        }
+        catch(Exception ex){
+            Log.d("FACE",ex.toString());
+        }
         Matrix matrix = new Matrix();
-        matrix.postRotate(90);
+        matrix.postRotate(degree);
         Bitmap rotatedBitmap = Bitmap.createBitmap(mNewPicture, 0, 0, mNewPicture.getWidth(), mNewPicture.getHeight(), matrix, true);
 
         //bitmap = getBitmapFromAsset(getApplicationContext(),"000001.jpg");
         imageView.setImageBitmap(rotatedBitmap);
     }
-
+    //https://stackoverflow.com/questions/7286714/android-get-orientation-of-a-camera-bitmap-and-rotate-back-90-degrees
+    private static int exifToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) { return 90; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {  return 180; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {  return 270; }
+        return 0;
+    }
 
 
 
