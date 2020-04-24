@@ -4,17 +4,18 @@ import matplotlib.pyplot as plt
 import pickle
 import cv2 as cv
 from sklearn.cluster import KMeans
-from sklearn.preprocessing import LabelEncoder
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.cluster import MiniBatchKMeans
 from os import listdir
 from os.path import isfile, join
-from mpl_toolkits.mplot3d import Axes3D
+import gc
 
 # Load Image Features - Running OpenCV Feature dectection over every file in given directory
-mypath = "test_set_10k"
+mypath = "img_align_celeba"
 
 d = []
 key = []
+# Counter for manually running garbage collection when loading images
+memCount = 0
 
 # Open cascade classifier:
 cascade = cv.CascadeClassifier('haarcascade_frontalface_alt.xml')
@@ -22,7 +23,6 @@ cascade = cv.CascadeClassifier('haarcascade_frontalface_alt.xml')
 # create facemark detector and load lbf model:
 facemark = cv.face.createFacemarkLBF()
 facemark.loadModel("lbfmodel.yaml")
-
 onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
 images = np.empty(len(onlyfiles), dtype=object)
 for n in range(0, len(onlyfiles)):
@@ -51,17 +51,37 @@ for n in range(0, len(onlyfiles)):
 
         print("Landmark APPEND failed on image: ", imageName)
 
+    images[n] = None
+    # call garbage collector every so often to avoid memory issues with large fileset
+    memCount = memCount + 1
+    if (memCount >= 100):
+        print("Images Cleared From memory:", memCount)
+        gc.collect()
+        memCount = 0
 
+
+
+print("Finished Loading Images!")
 # Turn data into numpy array for kmeans
 df = np.array(d)
 
+# Save the images in a pickle dump incase of memory error on kmeans fitting
+with open('200k_images.pkl', 'wb') as model_file:
+  pickle.dump(df, model_file, protocol=2)
+
+# Running Garbage collector again before building the model, b/c of the size of the dataset
+gc.collect()
 
 # Run K Means
-kmeans = KMeans(n_clusters=100, n_init=20, precompute_distances='auto',verbose=1, algorithm='auto')
+kmeans = KMeans(n_clusters=1000, n_init=10,n_jobs=20, precompute_distances=False,verbose=1,copy_x=False, algorithm='full')
+
+#kmeans = MiniBatchKMeans(init='k-means++', n_clusters=100, batch_size=100,
+#                      n_init=10, max_no_improvement=10, verbose=1)
 kmeans.fit(df)
+print("KMeans clusters generated!")
 
 # Dump Model to Pickle File
-with open('model_10k.pkl', 'wb') as model_file:
+with open('model_total_mini.pkl', 'wb') as model_file:
   pickle.dump(kmeans, model_file, protocol=2)
 
 

@@ -17,21 +17,16 @@ def resizeImage(image):
 	return image
 
 
-def loadModel(modelName):
-	# De-serialize static model.pkl file into an object called kmeans using pickle
-	with open(modelName, 'rb') as model:
-	    return pickle.load(model)
-
-
 # Path for result images
-mypath = "training_images_large"
+mypath = "img_align_celeba"
 
 # Load the image 
-image = cv.imread("DavidKopec.jpg") 
+image = cv.imread("goon_set/000010.jpg") 
 imageName = "DavidKopec.jpg"
 
-cv.imshow("testing image", image)
-
+cv.imshow("Testing Image!", image)
+cv.waitKey()
+cv.destroyAllWindows()
 image = resizeImage(image)
 
 # Read the Features
@@ -63,7 +58,8 @@ else:
 X_test = np.array(d)
 X_test = X_test.reshape(1, -1)
 
-kmeans = loadModel('model_100_clusters.pkl')
+with open("model_total.pkl", 'rb') as model:
+	kmeans =  pickle.load(model)
 
 # Let X_test be the feature for which we want to predict the output
 # Get the cluster the image is predicted to fit into
@@ -73,14 +69,18 @@ print("Result Cluster: #", result)
 # Get the results of that cluster
 result_cluster = np.where(kmeans.labels_ == result)[0]
 
-
-cluster = (np.where(kmeans.labels_ == result_cluster)[0])
-
-pritn(cluster)
+print(result_cluster)
 
 result_images = []
-for i in range(cluster):
+for i in range(result_cluster.size):
 	result_images.append(str(result_cluster[i]).zfill(6) + ".jpg")
 
+
+first_result_path = "img_align_celeba/" + result_images[0]
+first_result = cv.imread(first_result_path)
+
+cv.imshow("Result!", first_result)
+cv.waitKey()
+cv.destroyAllWindows()
 
 print(result_images)
