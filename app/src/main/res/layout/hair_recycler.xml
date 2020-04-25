@@ -2,22 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    android:backgroundTint="#3F3550"
+    android:background="@drawable/main_background"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hair_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="609dp">
+        android:layout_height="550dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 
     <Button
         android:id="@+id/hair_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/button"
         android:gravity="center"
         android:text="Reset" />
 </LinearLayout>

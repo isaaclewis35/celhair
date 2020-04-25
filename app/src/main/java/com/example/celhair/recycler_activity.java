@@ -161,8 +161,6 @@ public class recycler_activity extends AppCompatActivity {
             mHairImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //takePicture();
-                    //dispatchTakePictureIntent();
                     Intent intent = DisplayActivity.newIntent(getApplicationContext(),mFaceImage.getName(),"new_face", mFileNames);
                     try {
                         startActivity(intent);
@@ -184,8 +182,6 @@ public class recycler_activity extends AppCompatActivity {
             //Picasso.get().load("http://10.0.2.2:5000/static/" + mFaceImage.getName()).into(mHairImage);
             Picasso.get().load("http://ec2-3-18-225-17.us-east-2.compute.amazonaws.com:5000/static/" + mFaceImage.getName()).into(mHairImage);
 
-            //Picasso.get().load("http://127.0.0.1:5000/static/" + mFaceImage.getName()).into(mHairImage);
-            //Log.d("FACE",mFaceImage.getName());
         }
 
         @Override

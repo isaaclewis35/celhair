@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
                     //mPicView.setImageBitmap(kopec);
                     try{
                         Picasso.get().load("http://10.0.2.2:5000/static/000001.jpg").into(mPicView);
+
                     }
                     catch(Exception ex){
                         Log.d("FACE",ex.toString());
@@ -109,17 +110,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        mSetButton = (Button) findViewById(R.id.setButton);
-        mSetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //takePicture();
-                //dispatchTakePictureIntent();
-                setPic(mPicView);
-            }
-        });
-        */
         mNext = (Button) findViewById(R.id.nextButton);
         mNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,7 +140,9 @@ public class MainActivity extends AppCompatActivity {
             //https://developer.android.com/training/camera/photobasics#java
         }
         if(requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK){
+            mPicView.setBackgroundResource(0);
             setPic(mPicView);
+
         }
     }
 
@@ -215,15 +207,6 @@ public class MainActivity extends AppCompatActivity {
         return image;
     }
 
-    /*
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(currentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
-    }
-    */
     private void setPic(ImageView imageView) {
         // Get the dimensions of the View
         int targetW = imageView.getWidth();

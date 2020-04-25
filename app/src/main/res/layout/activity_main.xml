@@ -1,43 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#531616"
-    android:backgroundTint="#493E3E"
-    android:orientation="vertical">
+    android:background="@drawable/main_background">
 
     <ImageView
-        android:id="@+id/pictureView2"
-        android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginBottom="0dp"
-        app:srcCompat="@android:color/darker_gray" />
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/main_background" />
 
     <LinearLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:gravity="fill"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/pictureButton"
+        <ImageView
+            android:id="@+id/pictureView2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:text="Take Picture" />
+            android:layout_height="450dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginBottom="0dp"
+            android:background="@drawable/picture_background" />
 
-        <Button
-            android:id="@+id/nextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:text="Next" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/pictureButton"
+                android:layout_width="150dp"
+                android:layout_height="75dp"
+                android:layout_margin="15dp"
+                android:background="@drawable/button"
+                android:text="Take Picture" />
+
+            <Button
+                android:id="@+id/nextButton"
+                android:layout_width="150dp"
+                android:layout_height="75dp"
+                android:layout_margin="15dp"
+                android:background="@drawable/button"
+                android:text="Next" />
+        </LinearLayout>
+
     </LinearLayout>
 
-</LinearLayout>
-
+</FrameLayout>

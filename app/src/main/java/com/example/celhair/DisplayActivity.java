@@ -69,16 +69,6 @@ public class DisplayActivity extends AppCompatActivity {
         mPicView = (ImageView) findViewById(R.id.pictureView2);
 
 
-        //mShareButton = (Button) findViewById(R.id.shareButton);
-        /*
-        mShareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //placeholder
-            }
-        });
-*/
         mRecycle = (Button) findViewById(R.id.nextButton);
         mRecycle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,8 +94,6 @@ public class DisplayActivity extends AppCompatActivity {
                 catch(Exception ex){
                     Log.d("FACE", ex.toString());
                 }
-
-                //placeholder
             }
         });
 
@@ -116,15 +104,11 @@ public class DisplayActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
-            //rip
         } else {
 
             currentPhotoPath = extras.getString("NEW_PIC");
             Log.d("FACE",currentPhotoPath);
-            //Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
-            //newImage.setPic(bitmap);
             String pic = extras.getString("PIC_NAME");
-            //newImage.setName(tempString);
             mFileNames = extras.getStringArray("FILE_NAMES");
 
         }
@@ -133,15 +117,7 @@ public class DisplayActivity extends AppCompatActivity {
 
     public String saveBitmap(Bitmap bmp){
         try{
-            //String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                   // "/faceFiles";
             File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-            //File dir = new File(file_path);
-            //int duration = Toast.LENGTH_LONG;
-           // Toast toast = Toast.makeText(getApplicationContext(),file_path.toString(),duration);
-            //toast.show();
-            //if(!dir.exists())
-            //    dir.mkdirs();
             File file = new File(dir, currentPhotoPath);
             FileOutputStream fOut = new FileOutputStream(file);
             String filePath = file.getAbsolutePath();
@@ -173,8 +149,6 @@ public class DisplayActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
                 int duration = Toast.LENGTH_LONG;
-                //Toast toast = Toast.makeText(getApplicationContext(),e.toString(),duration);
-                //toast.show();
                 return null;
             }
         }
@@ -186,25 +160,17 @@ public class DisplayActivity extends AppCompatActivity {
                 if (bytes != null && bytes.length > 0) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                     String path = saveBitmap(bitmap);
-                    //int duration = Toast.LENGTH_LONG;
-                    //Toast toast = Toast.makeText(getApplicationContext(),path,duration);
-                    //toast.show();
                     Intent intent = Loading.newIntent(getApplicationContext(),path,"new_face", mFileNames);
                     try {
                         startActivity(intent);
                     }
                     catch(Exception ex){
-                        //toast = Toast.makeText(getApplicationContext(),ex.toString(),duration);
-                        //toast.show();
                         Log.d("FACE", "yo");
                         Log.d("FACE", "error",ex);
                     }
 
                 }
             } catch (Exception e) {
-                int duration = Toast.LENGTH_LONG;
-                //Toast toast = Toast.makeText(getApplicationContext(),e.toString(),duration);
-                //toast.show();
                 Log.d("FACE", "oh shit");
             }
         }
@@ -218,26 +184,7 @@ public class DisplayActivity extends AppCompatActivity {
 
         super.onStart();
 
-        //Bitmap bitmap = getBitmapFromAsset(getApplicationContext(),"faces/"+currentPhotoPath);
-        //mPicView.setImageBitmap(bitmap);
         Picasso.get().load("http://ec2-3-18-225-17.us-east-2.compute.amazonaws.com:5000/static/" + currentPhotoPath).into(mPicView);
-
-
-        /*
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                try{
-                    Log.d("FACE","CURRENT PATH 1: " + currentPhotoPath);
-                    setPic(mPicView);
-                    Log.d("FACE","CURRENT PATH 2: " + currentPhotoPath);
-                }
-                catch (Exception ex){
-                    ex.printStackTrace();
-                }
-            }
-        }, 3000);
-        */
 
     }
 
