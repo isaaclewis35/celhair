@@ -79,16 +79,14 @@ def getMatches():
     result_cluster = np.where(kmeans.labels_ == result)[0]
 
     result_images = []
-    #for i in range(20):
-    #    result_images.append(str(result_cluster[i]).zfill(6) + ".jpg")
+    
+    # If the cluster is too small, add results from the next closest cluster
+    if (result_cluster.size < 20):
+        next_cluster = np.where(kmeans.labels_ == (result+1))[0]
+        result_cluster = np.append(result_cluster,next_cluster)
 
-    max = 20
-    count = 0
-    for result in result_cluster:
-    	result_images.append(str(result).zfill(6) + ".jpg")
-    	count = count + 1
-    	if count > max:
-    		break
+    for i in range(result_cluster.size):
+        result_images.append(str(result_cluster[i]).zfill(6) + ".jpg")
 
     #print(result_images)
 
