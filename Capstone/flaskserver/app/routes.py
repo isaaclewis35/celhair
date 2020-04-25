@@ -88,8 +88,6 @@ def getMatches():
     for i in range(result_cluster.size):
         result_images.append(str(result_cluster[i]).zfill(6) + ".jpg")
 
-    #print(result_images)
-
     final = ""
     for i in result_images:
         final = final + " " + i
