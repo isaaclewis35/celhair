@@ -7,21 +7,34 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+
+import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class DisplayActivity extends AppCompatActivity {
@@ -33,7 +46,7 @@ public class DisplayActivity extends AppCompatActivity {
     private String file;
     private String currentPhotoPath;
     private String[] mFileNames;
-
+    private OkHttpClient mHTTPClient;
 
 
     public static Intent newIntent(Context packageContext, String newPic, String fileName, String[] fileNames) {
@@ -50,6 +63,7 @@ public class DisplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
 
+        mHTTPClient = new OkHttpClient();
 
 
         mPicView = (ImageView) findViewById(R.id.pictureView2);
@@ -83,16 +97,12 @@ public class DisplayActivity extends AppCompatActivity {
         mShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bitmap temp = getBitmapFromURL("http://ec2-3-18-225-17.us-east-2.compute.amazonaws.com:5000/static/" + currentPhotoPath);
-                String filePath = saveBitmap(temp);
-
-                Intent intent = Loading.newIntent(getApplicationContext(),filePath,"new_face", mFileNames);
-                try {
-                    startActivity(intent);
+                try{
+                    LikeDislikeTask ldt = new LikeDislikeTask();
+                    ldt.execute();
                 }
                 catch(Exception ex){
-                    Log.d("FACE", "yo");
-                    Log.d("FACE", "error",ex);
+                    Log.d("FACE", ex.toString());
                 }
 
                 //placeholder
@@ -120,43 +130,86 @@ public class DisplayActivity extends AppCompatActivity {
         }
 
     }
-    //https://stackoverflow.com/questions/18210700/best-method-to-download-image-from-url-in-android
-    public Bitmap getBitmapFromURL(String src) {
-        try {
-            java.net.URL url = new java.net.URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url
-                    .openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     public String saveBitmap(Bitmap bmp){
         try{
-            String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                    "/faceFiles";
-            File dir = new File(file_path);
-            if(!dir.exists())
-                dir.mkdirs();
-            File file = new File(dir, "pic" + currentPhotoPath + ".jpg");
+            //String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                   // "/faceFiles";
+            File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            //File dir = new File(file_path);
+            //int duration = Toast.LENGTH_LONG;
+           // Toast toast = Toast.makeText(getApplicationContext(),file_path.toString(),duration);
+            //toast.show();
+            //if(!dir.exists())
+            //    dir.mkdirs();
+            File file = new File(dir, currentPhotoPath);
             FileOutputStream fOut = new FileOutputStream(file);
-
-            bmp.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+            String filePath = file.getAbsolutePath();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
             fOut.flush();
             fOut.close();
-            String filePath = file.getAbsolutePath();
             return filePath;
         }
         catch(Exception ex){
+            int duration = Toast.LENGTH_LONG;
+            Toast toast = Toast.makeText(getApplicationContext(),ex.toString(),duration);
+            toast.show();
             Log.d("FACE", ex.toString());
         }
         return("uh oh");
+    }
+
+    private class LikeDislikeTask extends AsyncTask<String, Void, byte[]> {
+        @Override
+        protected byte[] doInBackground(String... params) {
+            Request request = new Request.Builder()
+                    //concatenates the like/dislike and message id into the url
+                    .url("http://ec2-3-18-225-17.us-east-2.compute.amazonaws.com:5000/static/" + currentPhotoPath)
+                    .build();
+
+
+            try (Response response = mHTTPClient.newCall(request).execute()) {
+                return response.body().bytes();
+            } catch (Exception e) {
+                e.printStackTrace();
+                int duration = Toast.LENGTH_LONG;
+                //Toast toast = Toast.makeText(getApplicationContext(),e.toString(),duration);
+                //toast.show();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(byte[] bytes) {
+            super.onPostExecute(bytes);
+            try {
+                if (bytes != null && bytes.length > 0) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    String path = saveBitmap(bitmap);
+                    //int duration = Toast.LENGTH_LONG;
+                    //Toast toast = Toast.makeText(getApplicationContext(),path,duration);
+                    //toast.show();
+                    Intent intent = Loading.newIntent(getApplicationContext(),path,"new_face", mFileNames);
+                    try {
+                        startActivity(intent);
+                    }
+                    catch(Exception ex){
+                        //toast = Toast.makeText(getApplicationContext(),ex.toString(),duration);
+                        //toast.show();
+                        Log.d("FACE", "yo");
+                        Log.d("FACE", "error",ex);
+                    }
+
+                }
+            } catch (Exception e) {
+                int duration = Toast.LENGTH_LONG;
+                //Toast toast = Toast.makeText(getApplicationContext(),e.toString(),duration);
+                //toast.show();
+                Log.d("FACE", "oh shit");
+            }
+        }
+
+
     }
 
 

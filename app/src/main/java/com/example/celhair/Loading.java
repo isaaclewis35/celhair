@@ -171,7 +171,7 @@ public class Loading extends AppCompatActivity {
             int duration = Toast.LENGTH_LONG;
 
             Toast toast = Toast.makeText(getApplicationContext(),result,duration);
-            toast.show();
+            //toast.show();
 
             result = result.trim();
 
